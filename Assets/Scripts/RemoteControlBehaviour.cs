@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RenderHeads.Media.AVProVideo;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +26,8 @@ public class RemoteControlBehaviour : MonoBehaviour
     public Text currentTimeText;
     public Text totalTimeText;
 
-    public VideoPlayer videoPlayer;
+    //public VideoPlayer videoPlayer;
+    public MediaPlayer videoPlayer;
 
     public GameObject soundSliderObj;
     public AudioSource audioSource;
@@ -46,20 +48,24 @@ public class RemoteControlBehaviour : MonoBehaviour
     {
         soundSlider = soundSliderObj.GetComponent<Slider>();
         remoteControlAnimator = GetComponent<Animator>();
-
+        //videoPlayer = MainManager.Singleton.page3.GetComponentInChildren<MediaPlayer>();
+        
         UpdateTotalTime();
         StartCoroutine("WaitForHideRemoteControl");
     }
 
     private void UpdateTotalTime()
     {
-        totalTimeText.text = ((int)(videoPlayer.clip.length / 60f)).ToString("D2") + ":" + ((int)(videoPlayer.clip.length % 60f)).ToString("D2");
+        int xiaoshi = (int)((videoPlayer.Info.GetDurationMs() * 0.001f) / 60f);
+        int fenzhong = (int)(((videoPlayer.Info.GetDurationMs() * 0.001f) / 60f) % 60f);
+        totalTimeText.text = xiaoshi.ToString("D2") + ":" + fenzhong.ToString("D2");
+        //totalTimeText.text = ((int)((videoPlayer.Info.GetDurationMs()*0.001f) / 60f)).ToString("D2") + ":" + ((int)(((videoPlayer.Info.GetDurationMs() * 0.001f) / 60f) % 60f)).ToString("D2");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (videoPlayer.isPlaying)
+        if (videoPlayer.Control.IsPlaying())
         {
             UpdateVideoCurrentTime();
             UpdateVideoProgressSlider();
@@ -68,12 +74,12 @@ public class RemoteControlBehaviour : MonoBehaviour
 
     private void UpdateVideoCurrentTime()
     {
-        currentTimeText.text = ((int)(videoPlayer.time / 60f)).ToString("D2") + ":" + ((int)(videoPlayer.time % 60f)).ToString("D2");
+        currentTimeText.text = ((int)((videoPlayer.Control.GetCurrentTimeMs()*0.001f) / 60f)).ToString("D2") + ":" + ((int)((videoPlayer.Control.GetCurrentTimeMs() * 0.001f) % 60f)).ToString("D2");
     }
 
     private void UpdateVideoProgressSlider()
     {
-        videoProgressSlider.value = (float)(videoPlayer.time / videoPlayer.clip.length);
+        videoProgressSlider.value = (float)(videoPlayer.Control.GetCurrentTimeMs() / videoPlayer.Info.GetDurationMs());
     }
 
     public void OnPlayButtonDown()

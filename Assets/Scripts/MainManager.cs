@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RenderHeads.Media.AVProVideo;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ public class MainManager : MonoBehaviour
     {
         idlePage.SetActive(true);
         homePage.SetActive(false);
-
+        idlePage.GetComponentInChildren<MediaPlayer>().Play();
         pagePosition = PagePosition.IdlePage;
     }
     public void BackToHomePage()

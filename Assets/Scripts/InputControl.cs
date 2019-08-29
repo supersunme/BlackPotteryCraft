@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RenderHeads.Media.AVProVideo;
 
 public class InputControl : MonoBehaviour
 {
@@ -22,7 +23,10 @@ public class InputControl : MonoBehaviour
 
             if (MainManager.Singleton.pagePosition == PagePosition.IdlePage)
             {
+                MainManager.Singleton.idlePage.GetComponentInChildren<MediaPlayer>().Pause();
                 MainManager.Singleton.EnterHomePage();
+                
+                Debug.Log("停止播放视频");
             }
         }
         else if (!isIdling && MainManager.Singleton.pagePosition != PagePosition.IdlePage)
